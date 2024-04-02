@@ -13,8 +13,26 @@ if ($conn->connect_error){
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Pagination parameters
+$records_per_page = 10;
+$current_page = isset($_GET['page']) ? $_GET['page']: 1;
+$offset = ($current_page - 1) * $records_per_page;
+
+// Search functionality
+$search = isset($_GET['search']) ? $_GET['search'] : "";
+
 // Select data from events table
 $sql = "SELECT title, description, date, time, location, contact FROM event_data";
+
+// Add search condition if search term is provided
+if (!empty($search)) {
+    $search_term = mysqli_real_escape_string($conn, $search);
+    $sql .= " WHERE title LIKE '%$search_term%' OR description LIKE '%$search_term%' OR location LIKE '%$search_term%'";
+} 
+
+// Add pagination limit and offset
+$sql .= " LIMIT $records_per_page OFFSET $offset";
+
 $result = $conn->query($sql);
 
 $events_data = array();
@@ -228,6 +246,13 @@ $conn->close();
                     <button type="submit" value="submit">Submit</button>
                 </form>
             </div>
+            <div class="container">
+                <h1>Search</h1>
+                <form class="form" action="index.php" method="GET">
+                    <input type="text" name="search" placeholder="Search...">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
             <div class="container" style="padding: 30px;">
                 <h1>Event List</h1>
                 <table>
@@ -254,6 +279,14 @@ $conn->close();
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+            <div class="pagination">
+                <?php if ($current_page > 1): ?>
+                    <a href="?page=<?php echo ($current_page - 1); ?>">Previous</a>
+                <?php endif; ?>
+                <?php if (count($events_data) == $records_per_page): ?>
+                    <a href="?page=<?php echo ($current_page + 1); ?>">Next</a>
+                <?php endif; ?>
             </div>
         </div>
         <footer>
