@@ -7,6 +7,7 @@ Welcome to Wazito Event Organizers! We specialize in creating unforgettable expe
 - Event Management: Plan and manage events effortlessly with our user-friendly interface.
 - Database Integration: Seamlessly store and retrieve event data from your MySQL database.
 - Customizable Styling: Easily customize the look and feel of your event pages with CSS.
+- Basic input validation and error handling.
 
 ## Prerequisites
 
