@@ -30,6 +30,14 @@ if (!empty($search)) {
     $sql .= " WHERE title LIKE '%$search_term%' OR description LIKE '%$search_term%' OR location LIKE '%$search_term%'";
 } 
 
+// Check if sort parameter is set and valid
+$sort = isset($_GET['sort']) ? $_GET['sort'] : '';
+$valid_sort_columns = array('title', 'description', 'date', 'time', 'location', 'contact');
+if (in_array($sort, $valid_sort_columns)) {
+    // Add sorting condition to the SQL query
+    $sql .= " ORDER BY $sort";
+}
+
 // Add pagination limit and offset
 $sql .= " LIMIT $records_per_page OFFSET $offset";
 
@@ -258,12 +266,12 @@ $conn->close();
                 <table>
                     <thead>
                         <tr>
-                            <th>Event Name</th>
-                            <th>Description</th>
-                            <th>Event Date</th>
-                            <th>Event Time</th>
-                            <th>Event Location</th>
-                            <th>Event contact</th>
+                            <th><a href="?sort=title">Event Name</a></th>
+                            <th><a href="?sort=description">Description</a></th>
+                            <th><a href="?sort=date">Event Date</a></th>
+                            <th><a href="?sort=time">Event Time</a></th>
+                            <th><a href="?sort=location">Event Location</a></th>
+                            <th><a href="?sort=contact">Event contact</a></th>
                         </tr>
                     </thead>
                     <tbody>
